@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 
 
 def print_message(mess):
@@ -9,7 +9,7 @@ def add_message(sender, text):
     new_message = {
         "sender": sender,
         "text": text,
-        "time": "19:22"  # ToDO: Здесь должно быть текущее время
+        "time": dt.datetime.now().strftime('%H:%M')
     }
     all_messages.append(new_message)
 
