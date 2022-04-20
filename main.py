@@ -2,14 +2,12 @@ import datetime as dt
 from flask import Flask
 from flask import request
 from flask import render_template
-from flask import redirect
-from flask import url_for
-from flask import abort
 
-MIN_NAME_LENGTH = 10
+
+MIN_NAME_LENGTH = 3
 MAX_NAME_LENGTH = 100
 
-MIN_MESSAGE_LENGTH = 10
+MIN_MESSAGE_LENGTH = 1
 MAX_MESSAGE_LENGTH = 3000
 
 all_messages = []
@@ -20,10 +18,6 @@ application = Flask(__name__)
 @application.route("/chat")
 def display_chat():
     return render_template("form.html")
-
-@application.route("/error_mess")
-def error_mess():
-    return render_template("error_mess.html")
 
 
 @application.route("/")
@@ -40,12 +34,14 @@ def get_messages():
 def send_message():
     sender = request.args["name"]
     text = request.args["text"]
-    # if MIN_NAME_LENGTH <= len(sender) <= MAX_NAME_LENGTH or\
-    #     MIN_MESSAGE_LENGTH <= len(text) <= MAX_MESSAGE_LENGTH:
-    #     add_message(sender, text)
-    #     return "Сообщение принято"
-    # else:
-    #return render_template("error_mess.html")#redirect(url_for("error_mess"))
+    if len(sender) > MAX_NAME_LENGTH or len(sender) < MIN_NAME_LENGTH:
+        sender = "ERROR"
+        text = f"Имя должно быть длинее чем {MIN_NAME_LENGTH} и короче чем {MAX_NAME_LENGTH} символов"
+    if len(text) < MIN_MESSAGE_LENGTH or len(text) > MAX_MESSAGE_LENGTH:
+        sender = "ERROR"
+        text = f"Сообщение должно быть длинее чем {MIN_MESSAGE_LENGTH} и короче чем {MAX_MESSAGE_LENGTH} символов"
+    add_message(sender, text)
+
 
 
 def print_message(mess):
